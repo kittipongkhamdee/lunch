@@ -1,10 +1,10 @@
 // Service worker: เก็บไฟล์ของแอพไว้ในเครื่อง ใช้งานออฟไลน์ได้ (network-first เพื่อให้ได้เวอร์ชันล่าสุดเสมอเมื่อมีเน็ต)
-const CACHE = 'lunch-v1';
+const CACHE = 'lunch-v2';
 const ASSETS = [
   './', 'index.html', 'css/app.css', 'manifest.webmanifest',
   'js/main.js', 'js/store.js', 'js/docs.js', 'js/util.js',
   'assets/icon.svg', 'assets/icon-192.png', 'assets/icon-512.png', 'assets/garuda.png',
-  'assets/fonts/Sarabun-Regular.ttf', 'assets/fonts/Sarabun-Bold.ttf', 'data/seed.json',
+  'assets/fonts/Sarabun-Regular.ttf', 'assets/fonts/Sarabun-Bold.ttf', 'assets/fonts/THSarabunNew-Regular.ttf', 'assets/fonts/THSarabunNew-Bold.ttf', 'data/seed.json',
 ];
 
 self.addEventListener('install', e => {

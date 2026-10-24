@@ -1,4 +1,6 @@
 @font-face { font-family: 'Sarabun'; font-weight: 400; font-style: normal; font-display: swap; src: local('Sarabun'), url('../assets/fonts/Sarabun-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'TH Sarabun New'; font-weight: 400; font-display: swap; src: local('TH Sarabun New'), url('../assets/fonts/THSarabunNew-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'TH Sarabun New'; font-weight: 700; font-display: swap; src: local('TH Sarabun New Bold'), url('../assets/fonts/THSarabunNew-Bold.ttf') format('truetype'); }
 @font-face { font-family: 'Sarabun'; font-weight: 700; font-style: normal; font-display: swap; src: local('Sarabun Bold'), url('../assets/fonts/Sarabun-Bold.ttf') format('truetype'); }
 
 :root {
@@ -179,7 +181,7 @@ table.frame { width: 100%; border-collapse: collapse; font-size: 12.5pt; line-he
 .empty-sheets { color: var(--muted); }
 
 @media print {
-  @page { size: A4; margin: 15mm 18mm; }
+  @page { size: A4; margin: 15mm 20mm 10mm 25mm; }
   html, body { background: #fff !important; }
   .topbar, .tabbar, .toolbar, .stickybar, .warnbar, #toast, .iconbtn { display: none !important; }
   .page { max-width: none; padding: 0; margin: 0; }
@@ -193,8 +195,43 @@ table.frame { width: 100%; border-collapse: collapse; font-size: 12.5pt; line-he
 table.frame { table-layout: fixed; }
 .frame .sl { white-space: normal; }
 .frame .dl { width: 2.2cm; } .frame .dl.s { width: 2.2cm; }
-table.frame { zoom: .84; }
 .frame .sig > div:first-child { padding-top: 3pt; } .frame .sig { margin: 2pt 0; }
 .frame .sig3 > div { margin-top: 3pt; } .frame .appr { margin-top: 3pt; }
-.doc { font-size: 13.5pt; } .doc .grid td { padding-block: 1.5pt; } .sg { line-height: 1.45; font-size: 11.5pt; }
 .doc .sig { margin-top: 2pt; } .doc .sig > div:first-child { padding-top: 4pt; } .opinion { margin-top: 4pt; }
+
+/* ═══ มาตรฐานเอกสาร (ตามระบบจัดซื้อของโรงเรียน: kittipongkhamdee/procurement)
+   TH Sarabun New ต้นฉบับ SIPA 16pt · ขอบ ซ้าย 2.5 / ขวา 2 / บน 1.5 / ล่าง 1 ซม. · ย่อหน้า 2.5 ซม.
+   ชื่อเอกสารทั่วไป 20pt หนา · บันทึกข้อความตามแบบสารบรรณ (ครุฑ 1.5 ซม., 29pt, ป้ายกำกับ 20pt) ═══ */
+.sheet { font: 16pt/1.2 'TH Sarabun New', 'Sarabun', sans-serif; padding: 15mm 20mm 10mm 25mm; }
+.sheet .indent { text-indent: 2.5cm; }
+.sheet h2 { font-size: 20pt; margin-bottom: 8pt; }
+.grid th, .grid td { font-size: 15pt; border-width: .8pt; }
+table.frame { font-size: 14pt; line-height: 1.15; }
+.frame > tbody > tr > td, .frame > tbody > tr > th { border-width: .8pt; }
+.frame .small, .frame .inner th, .frame .inner td { font-size: 14pt; }
+.frame .title { font-size: 16pt; }
+.sg { font-size: 14pt; line-height: 1.6; }
+.doc .grid td { padding-block: 3pt; }
+.doc .sig { margin-top: 4pt; } .doc .sig > div:first-child { padding-top: 10pt; }
+
+/* หัวบันทึกข้อความ */
+.mh { position: relative; height: 1.5cm; margin-bottom: 3pt; }
+.mh img { position: absolute; left: 0; top: 0; height: 1.5cm; width: auto; }
+.mh h1 { position: absolute; inset: 0; display: grid; place-items: center; font-size: 29pt; line-height: 35pt; font-weight: 700; }
+.mrow { display: flex; align-items: flex-end; gap: 4pt; margin-bottom: 2pt; line-height: 1; }
+.mrow .lab { font-size: 20pt; font-weight: 700; }
+.mrow .lab.sp { margin-left: 4pt; }
+.mrow .dot { border-bottom: 1.2px dotted #000; padding: 0 3pt 1pt; min-width: 0; line-height: 1.1; }
+.mrow .dot.grow { flex: 1; } .mrow .dot.no { width: 5.6cm; } .mrow .dot.day { width: 1.1cm; text-align: center; }
+.rule { border-bottom: .9pt solid #000; margin: 2pt 0 6pt; }
+.memo .to { margin: 4pt 0 0; }
+.memo .rule + .line.to { margin-top: 10pt; }
+
+/* ลายมือชื่อ: เริ่มที่แนวกึ่งกลางกระดาษ ชื่อในวงเล็บ/ตำแหน่งอยู่กึ่งกลางใต้เส้น */
+.sig { width: 50%; margin: 14pt 0 4pt 50%; text-align: center; }
+.sig .dl { width: 3.6cm; }
+.memo .sig .dl, .doc .sig .dl { width: 3.2cm; }
+@media print { .sheet { padding: 0; } }
+.doc .grid td { padding-block: 1pt; } .sg { font-size: 13pt; line-height: 1.3; }
+.doc .sig { margin-top: 0; } .doc .sig > div:first-child { padding-top: 6pt; } .doc .opinion { margin-top: 2pt; }
+.duo { display: flex; } .duo .sig { width: 50%; margin: 4pt 0; } .duo .sig .dl { width: 2.2cm; }

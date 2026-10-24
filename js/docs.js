@@ -18,7 +18,7 @@ const fill = (x, cls = '') => {
 const num = n => `${money(n)} บาท (${bahtText(n)})`;
 const sign = (label, name, extra = '') => `
   <div class="sig">
-    <div class="sl">ลงชื่อ<span class="dl"></span>${label}</div>
+    <div class="sl">(ลงชื่อ)<span class="dl"></span>${label}</div>
     <div>(${esc(name) || '<span class="dl"></span>'})</div>${extra}
   </div>`;
 const teacherOf = d => findTeacher(d.teacherId) || { name: '', position: '' };
@@ -27,13 +27,15 @@ const range = w => {
   return f === l ? thDate(f) : `${thDate(f)} – ${thDate(l)}`;
 };
 
+// หัวบันทึกข้อความตามแบบสารบรรณ (แบบที่ ๒๙): ครุฑสูง ๑.๕ ซม., "บันทึกข้อความ" ๒๙pt หนา, ป้ายกำกับ ๒๐pt หนา + เส้นจุดไข่ปลา
 function memoHead(s, no, date, subject) {
+  const p = thParts(date);
   return `
-  <div class="memo-head"><img src="assets/garuda.png" alt=""><h1>บันทึกข้อความ</h1></div>
-  <div class="line"><b>ส่วนราชการ</b> ${esc(s.school)}</div>
-  <div class="line"><b>ที่</b> ${fill(no)} <b class="gap">วันที่</b> ${esc(thDate(date))}</div>
-  <div class="line subject"><b>เรื่อง</b> ${esc(subject)}</div>
-  <div class="dots"></div>`;
+  <div class="mh"><img src="assets/garuda.png" alt=""><h1>บันทึกข้อความ</h1></div>
+  <div class="mrow"><b class="lab">ส่วนราชการ</b><span class="dot grow">${esc(s.school)}</span></div>
+  <div class="mrow"><b class="lab">ที่</b><span class="dot no">${esc(no) || '&nbsp;'}</span><b class="lab sp">วันที่</b><span class="dot day">${p.d}</span><span class="dot grow">${p.m} ${p.y}</span></div>
+  <div class="mrow"><b class="lab">เรื่อง</b><span class="dot grow">${esc(subject)}</span></div>
+  <div class="rule"></div>`;
 }
 
 // ───────── ใบรับรองการจ่ายเงินค่าอาหารกลางวัน (รายวัน) ─────────
@@ -62,7 +64,7 @@ function voucher(w, d, s) {
     <div class="c">${esc(s.school)} ${esc(s.locale)}</div>
     <div class="c">วันที่ ${p.d} เดือน ${p.m} พ.ศ. ${p.y}</div>
     <table class="grid lines">
-      <colgroup><col style="width:21%"><col style="width:22%"><col style="width:9%"><col style="width:11%"><col style="width:12%"><col style="width:13%"><col style="width:12%"></colgroup>
+      <colgroup><col style="width:20%"><col style="width:21%"><col style="width:9%"><col style="width:11%"><col style="width:14%"><col style="width:13%"><col style="width:12%"></colgroup>
       <thead><tr><th>รายการอาหาร</th><th>เครื่องปรุง</th><th>จำนวน</th><th>หน่วย</th><th>ราคา/หน่วย</th><th>จำนวนเงิน</th><th>หมายเหตุ</th></tr></thead>
       <tbody>${rows.join('')}</tbody>
       <tfoot><tr><td class="l"><b>รวมเป็นเงิน</b></td><td class="c" colspan="4">(${esc(bahtText(dayTotal(d)))})</td><td class="r"><b>${money(dayTotal(d))}</b></td><td></td></tr></tfoot>
@@ -103,14 +105,14 @@ function purchase(w, d, s) {
           ${sign('เจ้าหน้าที่พัสดุ', s.parcelName)}
           ${sign('หัวหน้าเจ้าหน้าที่พัสดุ', s.parcelHeadName, `<div>วันที่ ${esc(date)}</div>`)}
           <div class="appr">อนุมัติ ตามเสนอข้อ 1, 2 และ 3</div>
-          ${sign('ผู้อำนวยการ' + s.school, s.directorName, `<div>วันที่ ${esc(date)}</div>`)}</td>
+          ${sign('', s.directorName, `<div>${esc(s.directorTitle)}</div><div>วันที่ ${esc(date)}</div>`)}</td>
         <td class="small">เรียน ผู้อำนวยการ${esc(s.school)}<br><span class="indent">เพื่อโปรดทราบ พัสดุตามรายการข้างต้นได้ทำการตรวจรับไว้เป็นการถูกต้องครบถ้วนแล้ว</span>
-          <div class="sig3"><div class="sl">ลงชื่อ<span class="dl s"></span>ประธานกรรมการ</div><div class="sl">ลงชื่อ<span class="dl s"></span>กรรมการ</div><div class="sl">ลงชื่อ<span class="dl s"></span>กรรมการ</div></div>
+          <div class="sig3"><div class="sl">(ลงชื่อ)<span class="dl s"></span>ประธานกรรมการ</div><div class="sl">(ลงชื่อ)<span class="dl s"></span>กรรมการ</div><div class="sl">(ลงชื่อ)<span class="dl s"></span>กรรมการ</div></div>
           ${sign('เจ้าหน้าที่พัสดุ', s.parcelName)}
           <div>ได้ตรวจหลักฐานแล้วถูกต้อง จึงขอเบิกจ่ายเงินประเภทเงินอุดหนุนโครงการอาหารกลางวัน</div>
           ${sign('เจ้าหน้าที่การเงิน', s.financeName, `<div>วันที่ ${esc(date)}</div>`)}
           <div class="appr">ทราบและอนุมัติตามรายการที่ขอเบิกและจ่ายเงินได้</div>
-          ${sign('ผู้อำนวยการ' + s.school, s.directorName, `<div>วันที่ ${esc(date)}</div>`)}
+          ${sign('', s.directorName, `<div>${esc(s.directorTitle)}</div><div>วันที่ ${esc(date)}</div>`)}
           <div class="two"><div>${sign('ผู้รับเงิน', t.name)}</div><div>${sign('ผู้จ่ายเงิน', s.chairName)}</div></div></td>
       </tr>
     </table>
@@ -122,13 +124,13 @@ function loan(w, s) {
   const total = weekTotal(w), n = w.days.length;
   return `<section class="sheet memo">
     ${memoHead(s, w.memoNo, w.memoDate, 'ขออนุมัติเบิกจ่ายเงินโครงการอาหารกลางวัน')}
-    <div class="line"><b>เรียน</b> ผู้อำนวยการ${esc(s.school)}</div>
+    <div class="line to">เรียน&nbsp; ผู้อำนวยการ${esc(s.school)}</div>
     <p class="indent">ด้วยตามคำสั่ง${esc(s.school)} ที่ ${esc(s.orderNo)} ลงวันที่ ${esc(thDateLong(s.orderDate))} ได้แต่งตั้งให้ข้าพเจ้าและคณะเป็นกรรมการดำเนินการโครงการอาหารกลางวันนั้น ในการดำเนินการข้าพเจ้าได้ยืมเงินของทางโรงเรียนไปใช้ในการทดรองเป็นเงินค่าซื้ออาหารสด / อาหารแห้ง ตามสัญญายืมเงิน เลขที่ ${esc(s.loanNo)} ลงวันที่ ${esc(thDateLong(s.loanDate))} เป็นเงิน ${num(total)}</p>
     <p class="indent">การดำเนินงานโครงการอาหารกลางวัน ตั้งแต่วันที่ ${esc(range(w))} ข้าพเจ้าได้ใช้เงินทดรองจ่ายเป็นค่าซื้ออาหารสด/อาหารแห้ง ไปแล้วเป็นเงิน ${num(total)} ใบสำคัญ จำนวน ${n} ฉบับ ${num(total)}</p>
     <p class="indent">จึงเรียนมาเพื่ออนุมัติเบิกจ่ายเงินจากโรงเรียน เป็นเงิน ${num(total)} เพื่อนำไปชดเชยเงินยืมและใช้ในการทดรองจ่ายเป็นเงินค่าซื้ออาหารสด / อาหารแห้ง ตามสัญญายืมเงิน เลขที่ ${esc(s.loanNo)} ลงวันที่ ${esc(thDateLong(s.loanDate))} ในโครงการอาหารกลางวัน ต่อไป</p>
     <p class="indent">จึงเรียนมาเพื่อโปรดพิจารณาอนุมัติ</p>
     ${sign('ประธานกรรมการ', s.chairName)}
-    <div class="line gap-t"><b>เรียน</b> ผู้อำนวยการ${esc(s.school)}</div>
+    <div class="line to gap-t">เรียน&nbsp; ผู้อำนวยการ${esc(s.school)}</div>
     <p class="indent">ข้าพเจ้าได้ตรวจสอบการจ่ายเงินตามใบสำคัญ จำนวน ${n} ฉบับ ที่แนบมาแล้ว เห็นสมควรอนุมัติให้จ่ายเงิน</p>
     ${sign('เจ้าหน้าที่การเงิน', s.financeName)}
     <p class="gap-t">อนุมัติให้เบิกจ่ายเงิน จำนวนเงิน ${num(total)}</p>
@@ -144,7 +146,7 @@ function finance(w, s) {
     ...extras.map(e => `เบิกเงิน${esc(e.label)} จำนวน ${money(e.amount)} บาท`)];
   return `<section class="sheet memo">
     ${memoHead(s, w.memoNo, w.memoDate, 'ขออนุมัติเบิกจ่ายเงินโครงการอาหารกลางวัน')}
-    <div class="line"><b>เรียน</b> ผู้อำนวยการ${esc(s.school)}</div>
+    <div class="line to">เรียน&nbsp; ผู้อำนวยการ${esc(s.school)}</div>
     <p class="indent">ตามที่โรงเรียนได้รับจัดสรรงบประมาณหมวดเงินโครงการอาหารกลางวัน${esc(s.school)} ประจำปีงบประมาณ ${esc(s.fiscalYear)} ภาคเรียนที่ ${esc(s.term)} จึงขออนุมัติเบิกจ่ายเงินอาหารกลางวัน เป็นจำนวนเงิน ${num(total)} ตามรายละเอียด ดังนี้</p>
     <div class="list">${lines.map((l, i) => `<div>${i + 1}. ${l}</div>`).join('')}</div>
     <p class="indent">จึงเรียนมาเพื่อโปรดทราบและพิจารณาอนุมัติ</p>
@@ -189,8 +191,7 @@ function receipt(w, s) {
       <tbody>${rows}</tbody></table>
     <p class="gap-t"><b>เรียน</b> ผู้อำนวยการ${esc(s.school)}</p>
     <p class="indent">เพื่อโปรดทราบผลการตรวจรับพัสดุ และขออนุมัติจ่ายเงินให้ผู้รับจ้าง ตั้งแต่ วันที่ ${esc(thDate(w.days[0].date))} ถึง วันที่ ${esc(thDate(w.days.at(-1).date))} เป็นเงิน ${num(pay)}</p>
-    ${sign('เจ้าหน้าที่', s.parcelName)}
-    ${sign('หัวหน้าเจ้าหน้าที่', s.parcelHeadName)}
+    <div class="duo">${sign('เจ้าหน้าที่', s.parcelName)}${sign('หัวหน้าเจ้าหน้าที่', s.parcelHeadName)}</div>
     <div class="opinion"><b>ความคิดเห็นของผู้อำนวยการสถานศึกษา</b>
       <div>( &nbsp;) ทราบผลการตรวจรับ</div><div>( &nbsp;) อนุมัติ</div></div>
     ${sign('', s.directorName, `<div>ตำแหน่ง${esc(s.directorTitle)}</div>`)}
